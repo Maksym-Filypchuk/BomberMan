@@ -3,6 +3,7 @@ pygame.init()
 class Mapa():
     width_map = 17
     height_map = 14
+    aray_map =[]
     def __init__(self, width_map, height_map):
         self.width_map = width_map
         self.height_map = height_map
@@ -44,9 +45,21 @@ class Mapa():
                 y+=1
             y = 2
             x +=1 
+        self.aray_map = aray_map
         return aray_map
     
-
+    def can_move_point(self, x, y):
+        i = int(x/50)
+        j = int((y+25)/50)
+        if i<0 or j<0 or i>=self.width_map or j>=self.height_map:
+            return False
+        elif self.aray_map[i][j] == "grass":
+            return True
+        else:
+            return False
+    
+    def can_move(self, x, y, w = 40, h = 40):
+        return self.can_move_point(x, y) and self.can_move_point(x + w, y) and self.can_move_point(x, y + h) and self.can_move_point(x + w, y + h)
 
     def draw_map(self, game_map, win):
         i=0
