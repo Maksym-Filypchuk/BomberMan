@@ -1,6 +1,14 @@
 import pygame
 pygame.init()
 class Mapa():
+    bron = pygame.image.load("sprites/bron.jpg")
+    grass = pygame.image.load("sprites/grass.jpg")
+    scoreboard = pygame.image.load("sprites/scoreboard.png")
+    brick_hor = pygame.image.load("sprites/brick_hor.png")
+    brick_ver = pygame.image.load("sprites/brick_ver.png")
+    brick_brown = pygame.image.load("sprites/brick_brown.png")
+    door_in_wall = pygame.image.load("sprites/door_in_wall.png")
+    corner = pygame.image.load("sprites/corner.png")    
     width_map = 17
     height_map = 14
     aray_map =[]
@@ -12,27 +20,28 @@ class Mapa():
         width_map = self.width_map
         aray_map = [ ["0" for h in range( height_map ) ] for w in range( width_map ) ]
         aray_map[0][0] = "scoreboard"
+
+        x = 2
+        while x < width_map-2:
+            aray_map[x][1] = "brick_hor"
+            aray_map[x][height_map-1] = "rev_brick_hor"    
+            x +=1
+        y = 1
+        while y < height_map:
+            aray_map[0][y] = "brick_brown"
+            aray_map[width_map-1][y] = "rev_brick_brown"
+            if y%5==0:
+                aray_map[1][y] = "door_in_wall"
+                aray_map[width_map-2][y] = "rev_door_in_wall"
+            else:
+                aray_map[1][y] = "brick_ver"
+                aray_map[width_map-2][y] = "rev_brick_ver"    
+            y +=1
         aray_map[1][1] = "corner_left_up"
         aray_map[width_map-2][1] = "corner_right_up" 
         aray_map[width_map-2][height_map-1] = "corner_right_down"
         aray_map[1][height_map-1] = "corner_left_down"
 
-        x = 2
-        while x < width_map-2:
-            aray_map[x][2] = "hor_line"
-            aray_map[x][height_map-1] = "hor_line"    
-            x +=1
-        y = 1
-        while y < height_map:
-            aray_map[0][y] = "first_ver_line"
-            aray_map[width_map-1][y] = "rev_first_ver_line"
-            if y%5==0:
-                aray_map[1][y] = "door_in_wall"
-                aray_map[width_map-2][y] = "rev_door_in_wall"
-            else:
-                aray_map[1][y] = "second_ver_line"
-                aray_map[width_map-2][y] = "rev_second_ver_line"    
-            y +=1
 
         x=2
         y=2
@@ -47,7 +56,19 @@ class Mapa():
             x +=1 
         self.aray_map = aray_map
         return aray_map
-    
+    def slash_x(self, x):
+        #x = x+25
+        #y = y+25
+        if x % 100 < 50:
+            return -1
+        if x % 100 > 50:
+            return 1
+    def slash_y(self, y):
+        y = y+25
+        if y % 100 < 50:
+            return -2
+        if y % 100 > 50:
+            return 2
     def can_move_point(self, x, y):
         i = int(x/50)
         j = int((y+25)/50)
@@ -64,16 +85,40 @@ class Mapa():
     def draw_map(self, game_map, win):
         i=0
         j=0
-        bron = pygame.image.load("sprites/bron.jpg")
-        grass = pygame.image.load("sprites/grass.jpg")
+
+        win.blit(self.scoreboard, (0, 0))
         while i < self.width_map:
             while j < self.height_map:
                 if game_map[i][j] == "bron":
-                    win.blit(bron, (50*i, 50*j))
+                    win.blit(self.bron, (50*i, 50*j))
                 elif game_map[i][j] == "grass":
-                    win.blit(grass, (50*i, 50*j))
-                else:
-                    pygame.draw.rect(win, (255,255,0), (i*50, j*50, 50, 50))
+                    win.blit(self.grass, (50*i, 50*j))
+                elif game_map[i][j] == "brick_hor":
+                    win.blit(self.brick_hor, (50*i, 50*j))
+                elif game_map[i][j] == "rev_brick_hor":
+                    win.blit(pygame.transform.rotate(self.brick_hor, 180), (50*i, 50*j))
+                elif game_map[i][j] == "brick_ver":
+                    win.blit(self.brick_ver, (50*i, 50*j))
+                elif game_map[i][j] == "rev_brick_ver":
+                    win.blit(pygame.transform.rotate(self.brick_ver, 180), (50*i, 50*j))
+                elif game_map[i][j] == "brick_brown":
+                    win.blit(self.brick_brown, (50*i, 50*j))
+                elif game_map[i][j] == "rev_brick_brown":
+                    win.blit(pygame.transform.rotate(self.brick_brown, 180), (50*i, 50*j))
+                elif game_map[i][j] == "door_in_wall":  
+                    win.blit(self.door_in_wall, (50*i, 50*j))
+                elif game_map[i][j] == "rev_door_in_wall":  
+                    win.blit(pygame.transform.rotate(self.door_in_wall, 180), (50*i, 50*j))
+                elif game_map[i][j] == "corner_left_up":
+                    win.blit(self.corner, (50*i, 50*j))            
+                elif game_map[i][j] == "corner_left_down":
+                    win.blit(pygame.transform.rotate(self.corner,90), (50*i, 50*j)) 
+                elif game_map[i][j] == "corner_right_down":
+                    win.blit(pygame.transform.rotate(self.corner,180), (50*i, 50*j)) 
+                elif game_map[i][j] == "corner_right_up":
+                    win.blit(pygame.transform.rotate(self.corner,270), (50*i, 50*j)) 
+                #else:
+                    #pygame.draw.rect(win, (255,255,0), (i*50, j*50, 50, 50))
                 j+=1
             j = 0
             i +=1   

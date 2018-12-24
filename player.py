@@ -70,21 +70,37 @@ class Player():
         if keys[pygame.K_d] and not(self.left) and not(self.up) and not(self.down):
             if self.mapa.can_move(self.x + self.speed, self.y):
                 self.x += self.speed
+            elif self.mapa.slash_y(self.y) == 2:
+                self.y += 1
+            elif self.mapa.slash_y(self.y) == -2:
+                self.y -= 1
             self.when_do_i_walk("right")
             self.draw_player(self.player_img_right)
         elif keys[pygame.K_a] and not(self.right) and not(self.up) and not(self.down):
             if self.mapa.can_move(self.x - self.speed, self.y):
                 self.x -= self.speed
+            elif self.mapa.slash_y(self.y) == 2:
+                self.y += 1
+            elif self.mapa.slash_y(self.y) == -2:
+                self.y -= 1
             self.when_do_i_walk("left")
             self.draw_player(self.player_img_left)
         elif keys[pygame.K_w] and not(self.right) and not(self.left) and not(self.down):
             if self.mapa.can_move(self.x, self.y - self.speed):
                 self.y -= self.speed
+            elif self.mapa.slash_x(self.x) == 1:
+                self.x += 1
+            elif self.mapa.slash_x(self.x) == -1:
+                self.x -= 1
             self.when_do_i_walk("up")
             self.draw_player(self.player_img_up)
         elif keys[pygame.K_s]  and not(self.right) and not(self.left) and not(self.up):
             if self.mapa.can_move(self.x, self.y + self.speed):    
                 self.y += self.speed
+            elif self.mapa.slash_x(self.x) == 1:
+                self.x += 1
+            elif self.mapa.slash_x(self.x) == -1:
+                self.x -= 1
             self.when_do_i_walk("down")
             self.draw_player(self.player_img_down)
         else:
