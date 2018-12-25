@@ -3,7 +3,8 @@ pygame.init()
 from mapa import Mapa
 
 class Player():
-    win = pygame.display.set_mode((850, 700))
+    win = pygame.display.set_mode((0, 0))
+    mapa = Mapa(0, 0)
     right = False
     left = False
     up = False
@@ -12,7 +13,7 @@ class Player():
     y = 75
     speed=5
     anim_count = 0
-    mapa = Mapa(17, 14)
+   
     player_img_stay = [pygame.image.load("sprites/player/stay_1.png"),
     pygame.image.load("sprites/player/stay_2.png"), pygame.image.load("sprites/player/stay_1.png")]
 
@@ -32,10 +33,10 @@ class Player():
     def __init__(self, win, mapa):
         self.win = win
         self.mapa = mapa
-    def draw_player(self, move):
+    def draw_player(self,anim_move):
         if self.anim_count + 1 == 15:
             self.anim_count = 0
-        self.win.blit(move[self.anim_count//5], (self.x, self.y))
+        self.win.blit(anim_move[self.anim_count//5], (self.x, self.y))
         #pygame.draw.rect(self.win, (255,255,135), (self.x, self.y, 50,50) )
         self.anim_count += 1
 

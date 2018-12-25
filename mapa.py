@@ -1,8 +1,10 @@
 import pygame
 pygame.init()
+from random import randint
 class Mapa():
     bron = pygame.image.load("sprites/bron.jpg")
     grass = pygame.image.load("sprites/grass.jpg")
+    brick = pygame.image.load("sprites/brick.jpg")
     scoreboard = pygame.image.load("sprites/scoreboard.png")
     brick_hor = pygame.image.load("sprites/brick_hor.png")
     brick_ver = pygame.image.load("sprites/brick_ver.png")
@@ -55,6 +57,21 @@ class Mapa():
             x +=1 
         self.aray_map = aray_map
         return aray_map
+    def create_brick(self):
+        width_map = self.width_map
+        height_map = self.height_map
+        count_brick = ((width_map - 5)/2 * (height_map - 4)/2) #arithmetic calculation for count brick
+        game_map = self.create_map()
+        bricks = 0        
+        while bricks<=count_brick:
+            x = randint(3, width_map-1)
+            y = randint(3, height_map-1)
+            if game_map[x][y]=="grass":
+                game_map[x][y] = "brick"
+                bricks += 1
+        self.aray_map = game_map
+        return game_map
+ 
     def slash_x(self, x):
         if x % 100 < 35:
             return -1
@@ -79,10 +96,10 @@ class Mapa():
     def can_move(self, x, y, w = 48, h = 48):
         #return self.can_move_point(x, y) and self.can_move_point(x + w, y) and self.can_move_point(x, y + h) and self.can_move_point(x + w, y + h)
         return self.can_move_point(x+2, y+2) and self.can_move_point(x + w, y+2) and self.can_move_point(x+2, y + h) and self.can_move_point(x + w, y + h)
-    def draw_map(self, game_map, win):
+    def draw_map(self, win):
+        game_map = self.aray_map
         i=0
         j=0
-
         win.blit(self.scoreboard, (0, 0))
         while i < self.width_map:
             while j < self.height_map:
@@ -90,6 +107,8 @@ class Mapa():
                     win.blit(self.bron, (50*i, 50*j))
                 elif game_map[i][j] == "grass":
                     win.blit(self.grass, (50*i, 50*j))
+                elif game_map[i][j] == "brick":
+                    win.blit(self.brick, (50*i, 50*j))
                 elif game_map[i][j] == "brick_hor":
                     win.blit(self.brick_hor, (50*i, 50*j))
                 elif game_map[i][j] == "rev_brick_hor":
@@ -109,7 +128,7 @@ class Mapa():
                 elif game_map[i][j] == "corner_left_up":
                     win.blit(self.corner, (50*i, 50*j))            
                 elif game_map[i][j] == "corner_left_down":
-                    win.blit(pygame.transform.rotate(self.corner,90), (50*i, 50*j)) 
+                    win.blit(pygame.transform.flip(self.corner, 0, 1), (50*i, 50*j)) 
                 elif game_map[i][j] == "corner_right_down":
                     win.blit(pygame.transform.rotate(self.corner,180), (50*i, 50*j)) 
                 elif game_map[i][j] == "corner_right_up":
@@ -120,3 +139,5 @@ class Mapa():
                 j+=1
             j = 0
             i +=1   
+m = Mapa(17,14)
+m.create_brick()
