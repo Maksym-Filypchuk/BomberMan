@@ -19,8 +19,8 @@ class Mapa():
         height_map = self.height_map
         width_map = self.width_map
         aray_map = [ ["0" for h in range( height_map ) ] for w in range( width_map ) ]
-        aray_map[0][0] = "scoreboard"
 
+        aray_map[0][0] = "scoreboard"
         x = 2
         while x < width_map-2:
             aray_map[x][1] = "brick_hor"
@@ -42,7 +42,6 @@ class Mapa():
         aray_map[width_map-2][height_map-1] = "corner_right_down"
         aray_map[1][height_map-1] = "corner_left_down"
 
-
         x=2
         y=2
         while x < width_map-2:
@@ -57,17 +56,15 @@ class Mapa():
         self.aray_map = aray_map
         return aray_map
     def slash_x(self, x):
-        #x = x+25
-        #y = y+25
-        if x % 100 < 50:
+        if x % 100 < 35:
             return -1
-        if x % 100 > 50:
+        if x % 100 > 65:
             return 1
     def slash_y(self, y):
         y = y+25
-        if y % 100 < 50:
+        if y % 100 < 35:
             return -2
-        if y % 100 > 50:
+        if y % 100 > 65:
             return 2
     def can_move_point(self, x, y):
         i = int(x/50)
@@ -79,9 +76,9 @@ class Mapa():
         else:
             return False
     
-    def can_move(self, x, y, w = 40, h = 40):
-        return self.can_move_point(x, y) and self.can_move_point(x + w, y) and self.can_move_point(x, y + h) and self.can_move_point(x + w, y + h)
-
+    def can_move(self, x, y, w = 48, h = 48):
+        #return self.can_move_point(x, y) and self.can_move_point(x + w, y) and self.can_move_point(x, y + h) and self.can_move_point(x + w, y + h)
+        return self.can_move_point(x+2, y+2) and self.can_move_point(x + w, y+2) and self.can_move_point(x+2, y + h) and self.can_move_point(x + w, y + h)
     def draw_map(self, game_map, win):
         i=0
         j=0
@@ -116,7 +113,8 @@ class Mapa():
                 elif game_map[i][j] == "corner_right_down":
                     win.blit(pygame.transform.rotate(self.corner,180), (50*i, 50*j)) 
                 elif game_map[i][j] == "corner_right_up":
-                    win.blit(pygame.transform.rotate(self.corner,270), (50*i, 50*j)) 
+                    #win.blit(pygame.transform.rotate(self.corner,270), (50*i, 50*j)) 
+                    win.blit(pygame.transform.flip(self.corner, 1, 0), (50*i, 50*j))
                 #else:
                     #pygame.draw.rect(win, (255,255,0), (i*50, j*50, 50, 50))
                 j+=1
